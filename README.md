@@ -32,3 +32,5 @@ NULLs frequently occur when performing a LEFT or RIGHT JOIN. You saw in the last
 NULLs can also occur from simply missing data in our database.
 
 # COUNT the Number of Rows in a Table
+## Notice that:
+COUNT does not consider rows that have NULL values. Therefore, this can be useful for quickly identifying which rows have missing data. You will learn GROUP BY in an upcoming concept, and then each of these aggregators will become much more useful.
