@@ -19,3 +19,8 @@ SELECT account_id,
 FROM web_events
 GROUP BY account_id, channel
 ORDER BY account_id, channel DESC
+
+SELECT DISTINCT account_id,
+       channel
+FROM web_events
+ORDER BY account_id
