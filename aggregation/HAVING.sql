@@ -44,3 +44,16 @@ ON o.account_id = a.id
 GROUP BY a.id, a.name
 HAVING COUNT(*) > 20
 ORDER BY counts
+
+-- How many accounts spent more than 30,000 usd total across all orders?
+
+SELECT a.id, a.name, SUM(o.total_amt_usd) total_spent
+FROM accounts a
+JOIN orders o
+ON a.id = o.account_id
+GROUP BY a.id, a.name
+HAVING SUM(o.total_amt_usd) > 30000
+ORDER BY total_spent;
+
+
+
