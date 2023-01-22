@@ -16,3 +16,16 @@ FROM (SELECT name, CASE WHEN LEFT(UPPER(name), 1) IN ('0','1','2','3','4','5','6
                           THEN 0 ELSE 1 END AS letter
          FROM accounts) t1;
 
+SELECT SUM(vowels) vowels, SUM(other) other
+FROM (SELECT name, CASE WHEN LEFT(UPPER(name), 1) IN ('A','E','I','O','U') 
+                           THEN 1 ELSE 0 END AS vowels, 
+             CASE WHEN LEFT(UPPER(name), 1) IN ('A','E','I','O','U') 
+                          THEN 0 ELSE 1 END AS other
+            FROM accounts) t1;
+
+
+
+
+
+
+
