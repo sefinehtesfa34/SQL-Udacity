@@ -88,3 +88,20 @@ FROM (
        ORDER BY 1,3
 ) as T1
 GROUP BY 1
+
+
+SELECT t3.id, t3.name, t3.channel, t3.ct
+FROM (SELECT a.id, a.name, we.channel, COUNT(*) ct
+     FROM accounts a
+     JOIN web_events we
+     On a.id = we.account_id
+     GROUP BY a.id, a.name, we.channel) T3
+JOIN (SELECT t1.id, t1.name, MAX(ct) max_chan
+      FROM (SELECT a.id, a.name, we.channel, COUNT(*) ct
+            FROM accounts a
+            JOIN web_events we
+            ON a.id = we.account_id
+            GROUP BY a.id, a.name, we.channel) t1
+      GROUP BY t1.id, t1.name) t2
+ON t2.id = t3.id AND t2.max_chan = t3.ct
+ORDER BY t3.id;
