@@ -193,3 +193,117 @@ WHERE  order_date < '2017-01-01'
 WINDOW monthly_window AS
        (PARTITION BY month(order_date) ORDER BY order_date);
 *Note - This code will not run as written in the Workspaces
+
+
+Instructor Notes
+
+Let’s look at this again. We have broken down the syntax to explain LAG and LEAD functions separately.
+
+### LAG function
+Purpose
+
+It returns the value from a previous row to the current row in the table.
+
+Step 1:
+
+Let’s first look at the inner query and see what this creates.
+
+SELECT     account_id, SUM(standard_qty) AS standard_sum
+FROM       orders
+GROUP BY   1
+What you see after running this SQL code:
+
+The query sums the standard_qty amounts for each account_id to give the standard paper each account has purchased overall time. E.g., account_id 2951 has purchased 8181 units of standard paper.
+Notice that the results are not ordered by account_id or standard_qty.
+
+Step 2:
+
+We start building the outer query, and name the inner query as sub.
+
+SELECT account_id, standard_sum   
+FROM   (
+        SELECT   account_id, SUM(standard_qty) AS standard_sum
+        FROM     orders
+        GROUP BY 1
+       ) sub
+This still returns the same table you see above, which is also shown below.
+
+
+Step 3 (Part A):
+We add the Window Function OVER (ORDER BY standard_sum) in the outer query that will create a result set in ascending order based on the standard_sum column.
+
+SELECT account_id, 
+       standard_sum,
+       LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag
+FROM   (
+        SELECT   account_id, SUM(standard_qty) AS standard_sum
+        FROM     orders
+        GROUP BY 1
+       ) sub
+This ordered column will set us up for the other part of the Window Function (see below).
+
+Step 3 (Part B):
+
+The LAG function creates a new column called lag as part of the outer query: LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag. This new column named lag uses the values from the ordered standard_sum (Part A within Step 3).
+
+SELECT account_id,
+       standard_sum,
+       LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag
+FROM   (
+        SELECT   account_id,
+                 SUM(standard_qty) AS standard_sum
+        FROM     orders
+        GROUP BY 1
+       ) sub
+Each row’s value in lag is pulled from the previous row. E.g., for account_id 1901, the value in lag will come from the previous row. However, since there is no previous row to pull from, the value in lag for account_id 1901 will be NULL. For account_id 3371, the value in lag will be pulled from the previous row (i.e., account_id 1901), which will be 0. This goes on for each row in the table.
+
+What you see after running this SQL code:
+
+
+Step 4:
+To compare the values between the rows, we need to use both columns (standard_sum and lag). We add a new column named lag_difference, which subtracts the lag value from the value in standard_sum for each row in the table:
+standard_sum - LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag_difference
+
+SELECT account_id,
+       standard_sum,
+       LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag,
+       standard_sum - LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag_difference
+FROM (
+       SELECT account_id,
+       SUM(standard_qty) AS standard_sum
+       FROM orders 
+       GROUP BY 1
+      ) sub
+Each value in lag_difference is comparing the row values between the 2 columns (standard_sum and lag). E.g., since the value for lag in the case of account_id 1901 is NULL, the value in lag_difference for account_id 1901 will be NULL. However, for account_id 3371, the value in lag_difference will compare the value 79 (standard_sum for account_id 3371) with 0 (lag for account_id 3371) resulting in 79. This goes on for each row in the table.
+
+What you see after running this SQL code:
+
+
+Code from the Video
+
+Query1
+
+SELECT account_id,
+       standard_sum,
+       LAG(standard_sum) OVER(ORDER BY standard_sum) AS lag,
+       LEAD(standard_sum) OVER (ORDER BY standard_sum) AS lead
+FROM (
+       SELECT account_id,
+              SUM(standard_qty) AS standard_sum
+       FROM orders
+       GROUP BY 1
+) sub
+Query2
+
+SELECT account_id,
+       standard_sum,
+       LAG(standard_sum) OVER(ORDER BY standard_sum) AS lag,
+       LEAD(standard_sum) OVER (ORDER BY standard_sum) AS lead,
+       standard_sum - LAG(standard_sum) OVER (ORDER BY standard_sum) AS lag_difference,
+       LEAD(standard_sum) OVER (ORDER BY standard_sum) - standard_sum AS lead_difference
+FROM (
+       SELECT account_id,
+              SUM(standard_qty) AS standard_sum
+       FROM orders
+       GROUP BY 1
+) sub
