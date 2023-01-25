@@ -307,3 +307,52 @@ FROM (
        FROM orders
        GROUP BY 1
 ) sub
+
+
+# Percentiles Use Case
+When there are a large number of records that need to be ranked, individual ranks (e.g., 1, 2, 3, 4…) are ineffective in helping teams determine the best of the distribution from the rest. Percentiles help better describe large datasets. For example, a team might want to reach out to the Top 5% of customers.
+
+You can use window functions to identify what percentile (or quartile, or any other subdivision) a given row falls into. The syntax is NTILE(# of buckets). In this case, ORDER BY determines which column to use to determine the quartiles (or whatever number of ‘tiles you specify).
+
+Percentiles Syntax
+The following components are important to consider when building a query with percentiles:
+
+NTILE + the number of buckets you’d like to create within a column (e.g., 100 buckets would create traditional percentiles, 4 buckets would create quartiles, etc.)
+OVER
+ORDER BY (optional, typically a date column)
+AS + the new column name
+Expert Tip
+In cases with relatively few rows in a window, the NTILE function doesn’t calculate exactly as you might expect. For example, If you only had two records and you were measuring percentiles, you’d expect one record to define the 1st percentile, and the other record to define the 100th percentile. Using the NTILE function, what you’d actually see is one record in the 1st percentile, and one in the 2nd percentile.
+
+In other words, when you use an NTILE function but the number of rows in the partition is less than the NTILE(number of groups), then NTILE will divide the rows into as many groups as there are members (rows) in the set but then stop short of the requested number of groups. If you’re working with very small windows, keep this in mind and consider using quartiles or similarly small bands.
+
+
+Code from the Video*
+
+NTILE(# of buckets) OVER (ORDER BY ranking_column) AS new_column_name
+
+SELECT  customer_id,
+        composite_score,
+        NTILE(100) OVER(ORDER BY composite_score) AS percentile
+FROM    customer_lead_score;
+*Note - This code will not run as written in the Workspaces
+
+
+# Glossary:
+KeyTerm	Definition
+Aggregates	Aggregate functions that are used in window functions, too (e.g., sum, count, avg).
+Aliases	Shorthand that can be used if there are several window functions in one query.
+Dense_rank()	Ranking function similar to rank() but ranks are not skipped with ties.
+Dense_rank()	Ranking is the same amongst tied values and ranks do not skip for subsequent values.
+Lag/Lead	Calculating differences between rows’ values.
+Over	Typically precedes the partition by that signals what to “GROUP BY”.
+Partition by	A subclause of the OVER clause. Similar to GROUP BY.
+Percentiles	Defines what percentile a value falls into over the entire table.
+Rank()	Ranking function where a row could get the same rank if they have the same value.
+Rank()	Ranking is the same amongst tied values and ranks skip for subsequent values.
+Row_number()	Ranking function where each row gets a different number.
+Row_number()	Ranking is distinct amongst records even with ties in what the table is ranked against.
+
+
+
+
