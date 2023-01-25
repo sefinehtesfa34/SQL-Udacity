@@ -121,3 +121,49 @@ ON b.brand_id = a.brand_id
 GROUP BY a.brand_id, a.total_brand_sales
 ORDER BY a.total_brand_sales desc;
 
+# Window functions
+
+Window functions are sometimes confusing to figure out. When exactly do you use them? When are they appropriate over aggregate functions? There are two use cases that I’ve experienced where window functions are particularly helpful.
+
+When you want to measure trends or changes over rows or records in your data.
+When you want to rank a column for outreach or prioritization.
+A few cases where you’d have these needs are described below:
+
+Measuring change over time:
+Has the average price of airline tickets gone up this year?
+What’s the best way to keep the running total orders of customers?
+The ranking used for outreach prioritization:
+Use a combination of factors to rank companies most likely to need a loan.
+
+The following terms will be covered over the course of this lesson broken into three types of window functions: core, ranking, and advanced. Note that the naming of these window functions are specific to this course. Most users call all of the functions below “window functions.”
+
+Partition by: A subclause of the OVER clause. Similar to GROUP BY.
+Over: Typically precedes the partition by that signals what to “GROUP BY”.
+Aggregates: Aggregate functions that are used in window functions, too (e.g., sum, count, avg).
+Row_number(): Ranking function where each row gets a different number.
+Rank(): Ranking function where a row could get the same rank if they have the same value.
+Dense_rank(): Ranking function similar to rank() but ranks are not skipped with ties.
+Aliases: Shorthand that can be used if there are several window functions in one query.
+Percentiles: Defines what percentile a value falls into over the entire table.
+Lag/Lead: Calculating differences between rows’ values.
+
+Syntax
+AGGREGATE_FUNCTION (column_1) OVER
+ (PARTITION BY column_2 ORDER BY column_3)
+  AS new_column_name;
+As a reminder, a window function allows users to compare one row to another without doing any joins. Window functions are effective when you want to measure trends over time or rank a specific column, and it retains the total number of records without collapsing or condensing any of the original datasets.
+
+There are a few key terms to review as a part of understanding core window functions:
+
+PARTITION BY: A subclause of the OVER clause. I like to think of PARTITION BY as the GROUP BY equivalent in window functions. PARTITION BY allows you to determine what you’d like to “group by” within the window function. Most often, you are partitioning by a month, region, etc. as you are tracking changes over time.
+OVER: This syntax signals a window function and precedes the details of the window function itself.
+The sequence of Code for Window Functions
+Typically, when you are writing a window function that tracks changes or a metric over time, you are likely to structure your syntax with the following components:
+
+An aggregation function (e.g., sum, count, or average) + the column you’d like to track
+OVER
+PARTITION BY + the column you’d like to “group by”
+ORDER BY (optional and is often a date column)
+AS + the new column name
+We’ll review the key differences between aggregate functions/group by queries and window functions in the next section of this lesson.
+
