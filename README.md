@@ -167,3 +167,9 @@ ORDER BY (optional and is often a date column)
 AS + the new column name
 We’ll review the key differences between aggregate functions/group by queries and window functions in the next section of this lesson.
 
+
+There are three types of ranking functions that serve the same use case: how to take a column and rank its values. The choice of which ranking function to use is up to the SQL user, often created in conjunction with someone on a customer or business team.
+
+Row_number(): Ranking is distinct amongst records even with ties in what the table is ranked against.
+Rank(): Ranking is the same amongst tied values and ranks skip for subsequent values.
+Dense_rank(): Ranking is the same amongst tied values and ranks do not skip for subsequent values.
