@@ -173,3 +173,23 @@ There are three types of ranking functions that serve the same use case: how to 
 Row_number(): Ranking is distinct amongst records even with ties in what the table is ranked against.
 Rank(): Ranking is the same amongst tied values and ranks skip for subsequent values.
 Dense_rank(): Ranking is the same amongst tied values and ranks do not skip for subsequent values.
+
+Aliases Use Case
+If you are planning to write multiple window functions that leverage the same PARTITION BY, OVER, and ORDER BY in a single query, leveraging aliases will help tighten your syntax.
+
+Details of Aliases
+A monthly_window alias function is defined at the end of the query in the WINDOW clause.
+It is then called on each time an aggregate function is used within the SELECT clause.
+Code from the Video*
+
+SELECT order_id,
+       order_total,
+       order_price,
+       SUM(order_total) OVER monthly_window AS running_monthly_sales,
+       COUNT(order_id) OVER monthly_window AS running_monthly orders,
+       AVG(order_price) OVER monthly_window AS average_monthly_price
+FROM   amazon_sales_db
+WHERE  order_date < '2017-01-01'
+WINDOW monthly_window AS
+       (PARTITION BY month(order_date) ORDER BY order_date);
+*Note - This code will not run as written in the Workspaces
