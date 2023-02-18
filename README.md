@@ -420,8 +420,10 @@ SELECT & FROM<br>
 LIMIT<br>
 ORDER BY<br>
 WHERE<br>
+```
 Basic arithmetic operations<br>
 LIKE<br>
 IN<br>
 NOT<br>
 AND & BETWEEN & OR<br>
+```
