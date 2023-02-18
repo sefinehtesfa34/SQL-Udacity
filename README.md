@@ -382,6 +382,7 @@ Commands
 You have already learned a lot about writing code in SQL! Let's take a moment to recap all that we have covered before moving on:
 
 Statement	How to Use It	Other Details<br>
+```
 SELECT	SELECT Col1, Col2, ...	Provide the columns you want<br>
 FROM	FROM Table	Provide the table where the columns exist<br>
 LIMIT	LIMIT 10	Limits based number of rows returned<br>
@@ -393,6 +394,7 @@ NOT	WHERE Col NOT IN ('Y', 'N')	NOT is frequently used with LIKE and IN<br>
 AND	WHERE Col1 > 5 AND Col2 < 3	Filter rows where two or more conditions must be true<br>
 OR	WHERE Col1 > 5 OR Col2 < 3	Filter rows where at least one condition must be true<br>
 BETWEEN	WHERE Col BETWEEN 3 AND 5	Often easier syntax than using an AND<br>
+```
 Key Terms<br>
 KeyTerm	Definition<br>
 CREATE TABLE	is a statement that creates a new table in a database.<br>
@@ -402,12 +404,13 @@ FROM	specifies from which table(s) you want to select the columns. Notice the co
 SELECT	allows you to read data and display it. This is called a query and it specifies from which table<br>(s) you want to select the columns.
 Other Tips<br>
 Though SQL is not case sensitive (it doesn't care if you write your statements as all uppercase or <br>lowercase), we discussed some best practices. The order of the key words does matter! Using what you know so far, you will want to write your statements as:<br>
-
+```
 SELECT col1, col2<br>
 FROM table1<br>
 WHERE col3  > 5 AND col4 LIKE '%os%'<br>
 ORDER BY col5<br>
 LIMIT 10;<br>
+```
 Notice, you can retrieve different columns than those being used in the ORDER BY and WHERE statements. <br>Assuming all of these column names existed in this way (col1, col2, col3, col4, col5) within a table <br>calledtable1, this query would run just fine.<br>
 
 Lesson Overview<br>
@@ -416,11 +419,12 @@ Now that we have completed this lesson we have covered the following and you are
 Describe why SQL is important<br>
 Explain how SQL data is stored and structured<br>
 Create SQL queries using proper syntax including<br>
+```
 SELECT & FROM<br>
 LIMIT<br>
 ORDER BY<br>
 WHERE<br>
-```
+
 Basic arithmetic operations<br>
 LIKE<br>
 IN<br>
